@@ -70,6 +70,11 @@ class PostController extends Controller
         {
             return response($validation->errors());
         }
+        
+        if($request->image)
+        {
+            $post->update(['image'=>$request->image->getClientOriginalName()]);
+        }
 
         $post->update([
             'title'=>$request->title,

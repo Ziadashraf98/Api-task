@@ -14,14 +14,14 @@ class PostController extends Controller
 {
     public function user_posts()
     {
-        $posts = Post::where('user_id' , Auth::user()->id)->get();
+        $posts = Post::where('user_id' , Auth::id())->get();
         // dd($posts);
         return response(['success'=>true , 'data'=>PostResource::collection($posts)]);
     }
 
     public function single_post($id)
     {
-        $post = Post::where('user_id' , Auth::user()->id)->find($id);
+        $post = Post::where('user_id' , Auth::id())->find($id);
         // dd($post);
 
         if($post)
@@ -46,7 +46,7 @@ class PostController extends Controller
         }
 
         $post = Post::create([
-            'user_id'=>Auth::user()->id,
+            'user_id'=>Auth::id(),
             'title'=>$request->title,
             'body'=>$request->body,
             'image'=>$request->image->getClientOriginalName(),
@@ -57,7 +57,7 @@ class PostController extends Controller
 
     public function update_post($id , Request $request)
     {
-        $post = Post::where('user_id' , Auth::user()->id)->find($id);
+        $post = Post::where('user_id' , Auth::id())->find($id);
         // dd($post);
         
         $validation = Validator::make($request->all() , [
@@ -86,7 +86,7 @@ class PostController extends Controller
 
     public function delete_post($id)
     {
-        $post = Post::where('user_id' , Auth::user()->id)->find($id);
+        $post = Post::where('user_id' , Auth::id())->find($id);
         // dd($post);
         
         if($post)
@@ -100,7 +100,7 @@ class PostController extends Controller
 
     public function show_delete_posts($id)
     {
-        $post = Post::onlyTrashed()->where('user_id' , Auth::user()->id)->find($id);
+        $post = Post::onlyTrashed()->where('user_id' , Auth::id())->find($id);
         // dd($post);
 
         if($post)
@@ -113,7 +113,7 @@ class PostController extends Controller
 
     public function restore_post($id)
     {
-        $post = Post::onlyTrashed()->where('user_id' , Auth::user()->id)->find($id);
+        $post = Post::onlyTrashed()->where('user_id' , Auth::id())->find($id);
         // dd($post);
         
         if($post)

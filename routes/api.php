@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
 
+    Route::get('/pinned_posts' , [PostController::class , 'pinned_posts']);
     Route::get('/user_posts' , [PostController::class , 'user_posts']);
     Route::get('/single_post/{id}' , [PostController::class , 'single_post']);
     Route::post('/add_post' , [PostController::class , 'add_post']);

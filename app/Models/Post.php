@@ -9,5 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use HasFactory , SoftDeletes;
-    protected $fillable = ['title' , 'body' , 'image' , 'user_id'];
+    protected $fillable = ['title' , 'body' , 'image' , 'status' , 'user_id'];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class , 'post_tags');
+    }
 }

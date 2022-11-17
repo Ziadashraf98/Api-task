@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\PostTag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    public function pinned_posts()
+    {
+        $posts = Post::where('status' , 1)->get();
+        // dd($posts);
+        return response(['success'=>true , 'data'=>PostResource::collection($posts)]);
+    }
+
     public function user_posts()
     {
         $posts = Post::where('user_id' , Auth::id())->get();
@@ -21,7 +29,7 @@ class PostController extends Controller
 
     public function single_post($id)
     {
-        $post = Post::where('user_id' , Auth::id())->find($id);
+        $post = Post::with('tags')->where('user_id' , Auth::id())->find($id);
         // dd($post);
 
         if($post)
@@ -37,6 +45,7 @@ class PostController extends Controller
         $validation = Validator::make($request->all() , [
             'title'=>'required|max:255',
             'body'=>'required',
+            'status'=>'required',
             'image'=>'required|image',
         ]);
 
@@ -45,14 +54,27 @@ class PostController extends Controller
             return response($validation->errors());
         }
 
+        DB::beginTransaction();
+
         $post = Post::create([
             'user_id'=>Auth::id(),
             'title'=>$request->title,
             'body'=>$request->body,
+            'status'=>$request->status,
             'image'=>$request->image->getClientOriginalName(),
         ]);
+
+        foreach((array)$request->tags as $tag)
+        {
+            PostTag::create([
+                'post_id'=>$post->id,
+                'tag_id'=>$tag,
+            ]);
+        }
         
+        DB::commit();
         return response(['success'=>true , 'data'=>new PostResource($post)]);
+        
     }
 
     public function update_post($id , Request $request)
@@ -80,6 +102,11 @@ class PostController extends Controller
             'title'=>$request->title,
             'body'=>$request->body,
         ]);
+
+        if($request->tags)
+        {
+            $post->tags()->sync($request->tags);
+        }
         
         return response(['success'=>true , 'data'=>new PostResource($post)]);
     }

@@ -15,7 +15,7 @@ class PostController extends Controller
 {
     public function pinned_posts()
     {
-        $posts = Post::where('status' , 1)->get();
+        $posts = Post::where('status' , 0)->get();
         // dd($posts);
         return response(['success'=>true , 'data'=>PostResource::collection($posts)]);
     }

@@ -16,14 +16,14 @@ class PostSeeder extends Seeder
             'title'=>'What are your best programming languages?',
             'body'=>'PHP',
             'image'=>'test.png',
-            'status'=>1,
+            'status'=>0,
         ]);
         
         Post::create([
             'title'=>'What are the best types of laptops for you?',
             'body'=>'Lenovo',
             'image'=>'test.png',
-            'status'=>1,
+            'status'=>0,
         ]);
     }
 }

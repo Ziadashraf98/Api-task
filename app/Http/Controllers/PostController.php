@@ -22,9 +22,9 @@ class PostController extends Controller
 
     public function user_posts()
     {
-        $posts = Post::where('user_id' , Auth::id())->get();
+        $posts = Post::with('tags')->where('user_id' , Auth::id())->get();
         // dd($posts);
-        return response(['success'=>true , 'data'=>PostResource::collection($posts)]);
+        return response(['success'=>true , 'data'=>$posts]);
     }
 
     public function single_post($id)
@@ -34,7 +34,7 @@ class PostController extends Controller
 
         if($post)
         {
-            return response(['success'=>true , 'data'=>new PostResource($post)]);
+            return response(['success'=>true , 'data'=>$post]);
         }
         
         return response(['success'=>false , 'data'=>'Post Not Found']);

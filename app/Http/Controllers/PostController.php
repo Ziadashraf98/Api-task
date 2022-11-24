@@ -155,14 +155,8 @@ class PostController extends Controller
 
     public function forceDeleteJob()
     {
-        $posts = DB::table('posts')
-        ->whereNotNull('deleted_at')
-        ->where('deleted_at', '<=' , now()->subDays(30))
-        ->select('id' , 'title' , 'deleted_at')
-        ->get();
-        
         ForceDelete::dispatch();
 
-        return response(['success'=>true , 'data'=>$posts]);
+        return response(['processing'=>true]);
     }
 }

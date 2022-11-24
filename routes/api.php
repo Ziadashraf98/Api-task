@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::post('/login' , [UserController::class , 'login']);
 Route::post('/register' , [UserController::class , 'register']);
 
+Route::get('/forceDeleteJob' , [PostController::class , 'forceDeleteJob']);
+
 Route::get('/users_number' , [StatsController::class , 'users_number']);
 Route::get('/posts_number' , [StatsController::class , 'posts_number']);
 Route::get('/users_number_of_0_posts' , [StatsController::class , 'users_number_of_0_posts']);

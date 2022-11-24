@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Jobs\ForceDelete;
 use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\User;
@@ -150,5 +151,18 @@ class PostController extends Controller
         }
         
         return response(['success'=>false , 'data'=>'Post Not Found']);
+    }
+
+    public function forceDeleteJob()
+    {
+        $posts = DB::table('posts')
+        ->whereNotNull('deleted_at')
+        ->where('deleted_at', '<=' , now()->subDays(30))
+        ->select('id' , 'title' , 'deleted_at')
+        ->get();
+        
+        ForceDelete::dispatch();
+
+        return response(['success'=>true , 'data'=>$posts]);
     }
 }
